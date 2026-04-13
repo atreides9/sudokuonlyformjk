@@ -109,12 +109,27 @@ body::before {
   width: 100%;
   max-width: 780px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
   animation: fadeDown 0.5s ease both;
   position: relative;
   z-index: 1;
 }
+
+.new-game-top-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: var(--body-font);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.new-game-top-btn:hover { border-color: var(--accent); color: var(--accent); }
 
 .theme-toggle {
   display: flex;
@@ -133,15 +148,19 @@ body::before {
 }
 
 .toggle-track {
-  width: 42px;
-  height: 22px;
+  width: 56px;
+  height: 26px;
   background: var(--surface2);
   border: 1px solid var(--border);
-  border-radius: 11px;
+  border-radius: 13px;
   position: relative;
   transition: background 0.3s, border-color 0.3s;
   cursor: pointer;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5px;
 }
 
 [data-theme="light"] .toggle-track {
@@ -151,21 +170,26 @@ body::before {
 
 .toggle-thumb {
   position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 14px;
-  height: 14px;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  background: var(--text-dim);
-  transition: transform 0.25s cubic-bezier(0.34,1.4,0.64,1), background 0.3s;
+  background: var(--surface);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.35);
+  transition: transform 0.25s cubic-bezier(0.34,1.4,0.64,1);
 }
 
 [data-theme="light"] .toggle-thumb {
-  transform: translateX(20px);
-  background: var(--accent);
+  transform: translateX(30px);
 }
 
-.toggle-emoji { font-size: 0.8rem; line-height: 1; }
+.toggle-icon {
+  font-size: 0.72rem;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+}
 
 /* ── HEADER ──────────────────────────────────────────────────────────────── */
 header {
@@ -178,7 +202,7 @@ header {
 
 header h1 {
   font-family: var(--title-font);
-  font-size: 3rem;
+  font-size: calc(3rem - 3px);
   font-weight: 400;
   letter-spacing: 0.3em;
   color: var(--accent2);
@@ -188,7 +212,7 @@ header h1 {
 
 [data-theme="light"] header h1 {
   font-family: 'Caveat', cursive;
-  font-size: 3.2rem;
+  font-size: calc(3.2rem - 3px);
   font-weight: 600;
   letter-spacing: 0.22em;
   color: var(--text);
@@ -654,10 +678,121 @@ header p {
 .fail-btn:hover { background: var(--error); color: #fff; }
 
 /* ── ANIMATIONS ──────────────────────────────────────────────────────────── */
-@keyframes fadeDown { from { opacity:0; transform:translateY(-16px); } to { opacity:1; transform:translateY(0); } }
-@keyframes fadeUp   { from { opacity:0; transform:translateY(16px);  } to { opacity:1; transform:translateY(0); } }
-@keyframes fadeIn   { from { opacity:0; } to { opacity:1; } }
-@keyframes scaleIn  { from { transform:scale(0.88); opacity:0; } to { transform:scale(1); opacity:1; } }
+@keyframes fadeDown  { from { opacity:0; transform:translateY(-16px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeUp    { from { opacity:0; transform:translateY(16px);  } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn    { from { opacity:0; } to { opacity:1; } }
+@keyframes scaleIn   { from { transform:scale(0.88); opacity:0; } to { transform:scale(1); opacity:1; } }
+@keyframes toastIn   { from { opacity:0; transform:translateX(-50%) translateY(12px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+@keyframes toastOut  { from { opacity:1; } to { opacity:0; } }
+
+/* ── DIFFICULTY POPUP ────────────────────────────────────────────────────── */
+.diff-popup-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--overlay-bg);
+  align-items: center;
+  justify-content: center;
+  z-index: 150;
+}
+.diff-popup-overlay.show {
+  display: flex;
+  animation: fadeIn 0.3s ease;
+}
+
+.diff-popup-box {
+  background: var(--surface);
+  border: 1px solid var(--border-active);
+  padding: 44px 52px;
+  text-align: center;
+  animation: scaleIn 0.35s cubic-bezier(0.34,1.4,0.64,1) both;
+  box-shadow: var(--shadow);
+  min-width: 280px;
+}
+
+[data-theme="light"] .diff-popup-box {
+  background: #faf7f2;
+  border: 2px solid var(--accent);
+}
+
+.diff-popup-title {
+  font-family: var(--title-font);
+  font-size: 1.5rem;
+  color: var(--accent2);
+  letter-spacing: 0.15em;
+  margin-bottom: 6px;
+}
+
+[data-theme="light"] .diff-popup-title {
+  font-family: 'Caveat', cursive;
+  font-size: 1.8rem;
+  color: var(--text);
+}
+
+.diff-popup-sub {
+  font-size: 0.52rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 28px;
+}
+
+.diff-popup-btns {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.diff-popup-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: var(--body-font);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 14px 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.diff-popup-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--highlight);
+}
+
+/* ── TOAST ───────────────────────────────────────────────────────────────── */
+.toast {
+  display: none;
+  position: fixed;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface2);
+  border: 1px solid var(--border-active);
+  color: var(--text);
+  font-family: var(--body-font);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  padding: 12px 22px;
+  z-index: 300;
+  white-space: nowrap;
+  pointer-events: none;
+  max-width: 90vw;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.toast.show {
+  display: block;
+  animation: toastIn 0.3s ease both;
+}
+
+.toast.hide {
+  animation: toastOut 0.4s ease both;
+}
 
 /* ── RESPONSIVE ──────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
@@ -765,12 +900,13 @@ header p {
 
 <!-- TOP BAR -->
 <div class="top-bar">
+  <button class="new-game-top-btn" id="btn-new-top">새 게임</button>
   <label class="theme-toggle" id="theme-toggle" title="라이트/다크 모드 전환">
-    <span class="toggle-emoji">🌙</span>
     <div class="toggle-track">
+      <span class="toggle-icon">🌙</span>
+      <span class="toggle-icon">☀️</span>
       <div class="toggle-thumb"></div>
     </div>
-    <span class="toggle-emoji">☀️</span>
   </label>
 </div>
 
@@ -779,14 +915,7 @@ header p {
   <p>No ads. Just numbers. Only for MJK</p>
 </header>
 
-<div class="difficulty-bar">
-  <button class="diff-btn" data-level="easy">하</button>
-  <button class="diff-btn active" data-level="medium">중</button>
-  <button class="diff-btn" data-level="hard">상</button>
-  <button class="diff-btn" data-level="expert">최상</button>
-</div>
-
-<div class="game-area">
+<div class="game-area" id="game-area" style="display:none">
   <div class="board-wrap">
     <div id="board"></div>
     <div class="board-pause-veil" id="pause-veil">
@@ -821,7 +950,6 @@ header p {
       <button class="act-btn" id="btn-erase">✕ 지우기</button>
       <button class="act-btn" id="btn-notes">✎ 메모</button>
       <button class="act-btn" id="btn-hint">? 힌트 <span id="hint-count">(3)</span></button>
-      <button class="act-btn new-game" id="btn-new">NEW GAME</button>
     </div>
   </div>
 </div>
@@ -841,9 +969,26 @@ header p {
         <span class="win-stat-label">실수</span>
       </div>
     </div>
-    <button class="win-btn" onclick="newGame()">다시 하기</button>
+    <button class="win-btn" onclick="showDifficultyPopup()">다시 하기</button>
   </div>
 </div>
+
+<!-- DIFFICULTY POPUP -->
+<div id="diff-popup" class="diff-popup-overlay">
+  <div class="diff-popup-box">
+    <div class="diff-popup-title">난이도 선택</div>
+    <div class="diff-popup-sub">Select difficulty</div>
+    <div class="diff-popup-btns">
+      <button class="diff-popup-btn" data-level="easy">하</button>
+      <button class="diff-popup-btn" data-level="medium">중</button>
+      <button class="diff-popup-btn" data-level="hard">상</button>
+      <button class="diff-popup-btn" data-level="expert">최상</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
 
 <!-- MOBILE KEYPAD BOTTOM SHEET -->
 <div id="mobile-keypad" class="mobile-keypad">
@@ -860,7 +1005,7 @@ header p {
   <div class="fail-box">
     <div class="fail-title">Game Over</div>
     <div class="fail-sub">실수 5회 초과</div>
-    <button class="fail-btn" onclick="newGame()">다시 시작</button>
+    <button class="fail-btn" onclick="showDifficultyPopup()">다시 시작</button>
   </div>
 </div>
 
@@ -1204,29 +1349,86 @@ document.addEventListener('keydown', e => {
   }
 });
 
+// ── WELCOME MESSAGES ──────────────────────────────────────────────────────────
+const welcomeMessages = [
+  "안녕하세요, 민지님! 오늘도 스도쿠 하러 오셨군요 🎸",
+  "민지님, Oasis가 그랬죠 — \"Don't look back in anger.\" 오늘도 멋지게!",
+  "\"Fix You\" — Coldplay. 오늘 어려운 퍼즐도 민지님이 해결합니다!",
+  "Green Day — \"Good Riddance.\" 오늘 퍼즐은 민지님이 정복합니다!",
+  "Sum 41도 포기 안 했어요. 민지님도 파이팅! 🤘",
+  "My Chemical Romance — \"I'm not okay (I'm okay).\" 오늘도 화이팅, 민지님!",
+  "민지님, Wonderwall은 오늘의 스도쿠입니다 🎶",
+  "\"The Scientist\" — Coldplay. 민지님의 분석력이 오늘도 빛나는 날!",
+  "Green Day — \"Wake Me Up When September Ends.\" 지금은 스도쿠 할 시간이에요, 민지님!",
+  "\"Fat Lip\" 따라 흥얼거리며 스도쿠 풀 시간, 민지님! 🎵",
+  "민지님, MCR의 Welcome to the Black Parade처럼 당당하게!",
+  "Oasis — \"Champagne Supernova\" 기분으로 오늘 퍼즐 완파, 민지님!",
+  "민지님 오셨군요! Coldplay의 \"A Sky Full of Stars\"처럼 오늘도 빛나세요 ⭐",
+  "\"Boulevard of Broken Dreams\" — Green Day. 민지님의 스도쿠는 절대 broken 아님!",
+  "Sum 41 — \"In Too Deep.\" 스도쿠에 깊이 빠져보세요, 민지님!",
+  "민지님, MCR — \"Helena.\" 오늘 퍼즐은 완벽하게 마무리해요!",
+  "Oasis — \"Live Forever.\" 민지님의 스도쿠 실력도 영원하길! 🎸",
+  "Green Day — \"Basket Case.\" 스도쿠 때문에 미칠 것 같아도, 민지님은 할 수 있어요!",
+  "민지님, Sum 41 — \"Still Waiting\" for your perfect score!",
+  "MCR — \"Famous Last Words.\" 마지막 칸까지 포기하지 마세요, 민지님!",
+  "Oasis — \"Don't Go Away.\" 오늘도 스도쿠와 함께해 줘서 고마워요, 민지님!",
+  "\"Yellow\" — Coldplay. 민지님을 위해 별이 빛나고 있어요 ⭐",
+  "\"American Idiot\" — Green Day. 민지님은 절대 아님. 스도쿠 천재!",
+  "Sum 41 — \"Pieces.\" 오늘 퍼즐 조각을 맞춰보세요, 민지님!",
+  "MCR — \"I Don't Love You.\" 아니, 사실 민지님의 실력은 사랑합니다 🖤",
+  "Oasis — \"Whatever.\" 민지님 페이스대로, 앞으로 돌진!",
+  "\"Clocks\" — Coldplay. 째깍째깍, 민지님의 기록 경신 시간!",
+  "Green Day — \"Time of Your Life.\" 오늘 스도쿠가 최고의 시간이 되길!",
+  "민지님, 오늘도 반갑습니다! MCR처럼 — \"Na na na na na\" 🎶",
+  "Coldplay — \"Speed of Sound.\" 민지님의 두뇌가 빛의 속도로 움직이길! 🚀",
+];
+
+let toastTimer = null;
+
+function showToast() {
+  const el = document.getElementById('toast');
+  const msg = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
+  el.textContent = msg;
+  el.classList.remove('hide');
+  el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    el.classList.add('hide');
+    setTimeout(() => { el.classList.remove('show', 'hide'); }, 400);
+  }, 3000);
+}
+
+// ── DIFFICULTY POPUP ──────────────────────────────────────────────────────────
+function showDifficultyPopup() {
+  document.getElementById('diff-popup').classList.add('show');
+}
+
+function hideDifficultyPopup() {
+  document.getElementById('diff-popup').classList.remove('show');
+}
+
+document.querySelectorAll('.diff-popup-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    state.difficulty = btn.dataset.level;
+    hideDifficultyPopup();
+    document.getElementById('game-area').style.display = '';
+    newGame();
+    showToast();
+  });
+});
+
 // ── THEME TOGGLE ──────────────────────────────────────────────────────────────
 document.getElementById('theme-toggle').addEventListener('click', () => {
   const html = document.documentElement;
   html.setAttribute('data-theme', html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-  renderBoard();
-  renderNumpad();
-});
-
-// ── DIFFICULTY ────────────────────────────────────────────────────────────────
-document.querySelectorAll('.diff-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    state.difficulty = btn.dataset.level;
-    newGame();
-  });
+  if (state.puzzle) { renderBoard(); renderNumpad(); }
 });
 
 // ── BUTTONS ───────────────────────────────────────────────────────────────────
 document.getElementById('btn-erase').addEventListener('click', eraseCell);
 document.getElementById('btn-notes').addEventListener('click', toggleNotes);
 document.getElementById('btn-hint').addEventListener('click', useHint);
-document.getElementById('btn-new').addEventListener('click', newGame);
+document.getElementById('btn-new-top').addEventListener('click', showDifficultyPopup);
 document.getElementById('pause-btn').addEventListener('click', togglePause);
 
 // Mobile keypad buttons
@@ -1234,7 +1436,8 @@ document.getElementById('mk-erase').addEventListener('click', () => { eraseCell(
 document.getElementById('mk-notes').addEventListener('click', () => { toggleNotes(); renderMobileKeypad(); });
 document.getElementById('mk-close').addEventListener('click', hideMobileKeypad);
 
-newGame();
+// ── INITIAL LOAD ──────────────────────────────────────────────────────────────
+showDifficultyPopup();
 </script>
 </body>
 </html>
