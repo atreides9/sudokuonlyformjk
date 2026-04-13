@@ -26,7 +26,7 @@
   --error-bg: rgba(192,103,90,0.12);
   --given: #d4c4a8;
   --user-color: #c8b89a;
-  --note-color: #666;
+  --note-color: #aaa;
   --board-bg: #0f0f0f;
   --cell-font: 'DM Mono', monospace;
   --note-font: 'DM Mono', monospace;
@@ -192,7 +192,7 @@ body::before {
 }
 
 /* ── HEADER ──────────────────────────────────────────────────────────────── */
-header {
+.main-header {
   text-align: center;
   margin-bottom: 28px;
   animation: fadeDown 0.6s 0.05s ease both;
@@ -200,7 +200,7 @@ header {
   z-index: 1;
 }
 
-header h1 {
+.main-header h1 {
   font-family: var(--title-font);
   font-size: calc(3rem - 3px);
   font-weight: 400;
@@ -210,7 +210,7 @@ header h1 {
   transition: color 0.3s, font-family 0.1s;
 }
 
-[data-theme="light"] header h1 {
+[data-theme="light"] .main-header h1 {
   font-family: 'Caveat', cursive;
   font-size: calc(3.2rem - 3px);
   font-weight: 600;
@@ -218,11 +218,45 @@ header h1 {
   color: var(--text);
 }
 
-header p {
+.main-header p {
   font-size: 0.62rem;
   letter-spacing: 0.25em;
   color: var(--text-dim);
   margin-top: 8px;
+  text-transform: uppercase;
+  font-family: 'DM Mono', monospace;
+}
+
+/* top-bar 안 헤더 (≤414px 전용) */
+.top-bar-header {
+  display: none;
+  text-align: center;
+  flex: 1;
+}
+
+.top-bar-header h1 {
+  font-family: var(--title-font);
+  font-size: 1.1rem;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  color: var(--accent2);
+  line-height: 1;
+  transition: color 0.3s, font-family 0.1s;
+}
+
+[data-theme="light"] .top-bar-header h1 {
+  font-family: 'Caveat', cursive;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: var(--text);
+}
+
+.top-bar-header p {
+  font-size: 0.42rem;
+  letter-spacing: 0.18em;
+  color: var(--text-dim);
+  margin-top: 3px;
   text-transform: uppercase;
   font-family: 'DM Mono', monospace;
 }
@@ -410,6 +444,7 @@ header p {
   align-items: center;
   justify-content: center;
   font-family: var(--note-font);
+  font-weight: 700;
 }
 
 [data-theme="light"] .note-item {
@@ -798,7 +833,7 @@ header p {
 @media (max-width: 640px) {
   :root { --cell-size: 38px; }
   [data-theme="light"] { --cell-size: 38px; }
-  header h1 { font-size: 2rem; }
+  .main-header h1 { font-size: 2rem; }
   .game-area { flex-direction: column; align-items: center; }
   .side-panel { width: 100%; flex-direction: row; flex-wrap: wrap; gap: 8px; }
   .timer-box, .mistakes-box { flex: 1; }
@@ -817,6 +852,12 @@ header p {
   .side-panel .numpad,
   .side-panel .actions {
     display: none;
+  }
+  .main-header {
+    display: none;
+  }
+  .top-bar-header {
+    display: block;
   }
 }
 
@@ -912,6 +953,10 @@ header p {
 <!-- TOP BAR -->
 <div class="top-bar">
   <button class="new-game-top-btn" id="btn-new-top">새 게임</button>
+  <header class="top-bar-header">
+    <h1>SUDOKU</h1>
+    <p>No ads. Just numbers. Only for MJK</p>
+  </header>
   <label class="theme-toggle" id="theme-toggle" title="라이트/다크 모드 전환">
     <div class="toggle-track">
       <span class="toggle-icon">🌙</span>
@@ -921,7 +966,7 @@ header p {
   </label>
 </div>
 
-<header>
+<header class="main-header">
   <h1>SUDOKU</h1>
   <p>No ads. Just numbers. Only for MJK</p>
 </header>
@@ -1102,10 +1147,11 @@ function newGame() {
   state.board  = puzzle.map(r => [...r]);
   state.notes  = Array.from({length:9},()=>Array.from({length:9},()=>new Set()));
   state.selected = null; state.notesMode = false;
-  state.mistakes = 0; state.hints = 3;
+  const HINTS = { easy:3, medium:7, hard:10, expert:15 };
+  state.mistakes = 0; state.hints = HINTS[state.difficulty] ?? 3;
   state.elapsed = 0; state.gameOver = false; state.paused = false;
 
-  document.getElementById('hint-count').textContent = `(3)`;
+  document.getElementById('hint-count').textContent = `(${state.hints})`;
   document.getElementById('btn-notes').classList.remove('notes-on');
   hideMobileKeypad();
   updatePauseBtn();
