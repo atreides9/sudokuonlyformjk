@@ -34,7 +34,7 @@
   --cell-font-weight: 400;
   --given-font-weight: 500;
   --cell-size: 56px;
-  --board-outer-border: 2px solid #e8e8e8;
+  --board-outer-border: 2px solid #555555;
   --shadow: none;
   --body-font: 'DM Mono', monospace;
   --title-font: 'Playfair Display', serif;
@@ -1367,7 +1367,7 @@ function renderNumpad() {
     if (state.difficulty === 'easy') {
       const ce = document.createElement('span');
       ce.className = 'count';
-      ce.textContent = `${cnt}/9`;
+      ce.textContent = 9 - cnt;
       btn.appendChild(ce);
     }
     if (cnt >= 9) btn.classList.add('complete');
