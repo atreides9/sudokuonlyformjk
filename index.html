@@ -461,6 +461,29 @@ body::before {
 }
 
 /* ── TIMER ───────────────────────────────────────────────────────────────── */
+.total-time-box {
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  background: var(--surface);
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.total-time-label {
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.total-time-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
 .timer-box {
   border: 1px solid var(--border);
   padding: 12px 14px;
@@ -1040,6 +1063,12 @@ body::before {
       </div>
     </div>
 
+    <!-- 누적 게임 시간 -->
+    <div class="total-time-box">
+      <div class="total-time-label">Total</div>
+      <div class="total-time-val" id="total-time">0h 0m</div>
+    </div>
+
     <!-- MISTAKES: 10 -->
     <div class="mistakes-box">
       <span class="mistakes-label">실수</span>
@@ -1209,14 +1238,46 @@ function newGame() {
   renderMistakes();
 }
 
+// ── TOTAL TIME ────────────────────────────────────────────────────────────────
+const TOTAL_TIME_KEY = 'sudoku_total_seconds';
+let totalTimeBase = parseInt(localStorage.getItem(TOTAL_TIME_KEY) || '0', 10);
+let sessionStart = 0; // elapsed at session tracking start
+
+function saveTotalTime() {
+  const added = state.elapsed - sessionStart;
+  if (added > 0) {
+    totalTimeBase += added;
+    localStorage.setItem(TOTAL_TIME_KEY, totalTimeBase);
+    sessionStart = state.elapsed;
+  }
+}
+
+function updateTotalTimeDisplay() {
+  const total = totalTimeBase + (state.elapsed - sessionStart);
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = total % 60;
+  let text;
+  if (h > 0) text = `${h}h ${m}m`;
+  else if (m > 0) text = `${m}m ${s}s`;
+  else text = `${s}s`;
+  document.getElementById('total-time').textContent = text;
+}
+
+// 페이지 닫힐 때 저장
+window.addEventListener('beforeunload', saveTotalTime);
+
 // ── TIMER ─────────────────────────────────────────────────────────────────────
 function startTimer() {
   clearInterval(state.timerInterval);
+  sessionStart = state.elapsed;
   updateTimerDisplay();
+  updateTotalTimeDisplay();
   state.timerInterval = setInterval(() => {
     if (!state.gameOver && !state.paused) {
       state.elapsed++;
       updateTimerDisplay();
+      updateTotalTimeDisplay();
     }
   }, 1000);
 }
@@ -1422,6 +1483,7 @@ function checkWin() {
     if (state.board[r][c] !== state.solved[r][c]) return;
   state.gameOver = true;
   clearInterval(state.timerInterval);
+  saveTotalTime();
   const m = String(Math.floor(state.elapsed/60)).padStart(2,'0');
   const s = String(state.elapsed%60).padStart(2,'0');
   document.getElementById('w-time').textContent = `${m}:${s}`;
@@ -1432,6 +1494,7 @@ function checkWin() {
 function gameOver() {
   state.gameOver = true;
   clearInterval(state.timerInterval);
+  saveTotalTime();
   hideMobileKeypad();
   renderBoard();
   setTimeout(() => document.getElementById('fail-overlay').classList.add('show'), 300);
@@ -1441,6 +1504,7 @@ function gameOver() {
 document.addEventListener('keydown', e => {
   if (state.gameOver) return;
   if (e.key === ' ') { e.preventDefault(); togglePause(); return; }
+  if (e.key === 'Tab') { e.preventDefault(); toggleNotes(); return; }
   if (state.paused) return;
   if (e.key >= '1' && e.key <= '9') { inputNumber(+e.key); return; }
   if (e.key === 'Backspace' || e.key === 'Delete' || e.key === '0') { eraseCell(); return; }
@@ -1542,6 +1606,7 @@ document.getElementById('mk-notes').addEventListener('click', () => { toggleNote
 document.getElementById('mk-close').addEventListener('click', hideMobileKeypad);
 
 // ── INITIAL LOAD ──────────────────────────────────────────────────────────────
+updateTotalTimeDisplay();
 showDifficultyPopup();
 </script>
 </body>
