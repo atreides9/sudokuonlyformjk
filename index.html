@@ -21,7 +21,7 @@
   --accent2: #e8d5b7;
   --highlight: rgba(200,184,154,0.18);
   --highlight-same: rgba(200,184,154,0.34);
-  --selected-bg: rgba(200,184,154,0.52);
+  --selected-bg: rgba(255,200,80,0.28);
   --error: #c0675a;
   --error-bg: rgba(192,103,90,0.12);
   --given: #d4c4a8;
@@ -354,11 +354,15 @@ header p {
 /* Highlights */
 .cell.selected {
   background: var(--selected-bg) !important;
+  outline: 3px solid rgba(255, 210, 100, 0.9);
+  outline-offset: -2px;
+  z-index: 1;
 }
 
 [data-theme="light"] .cell.selected {
   outline: 3px solid rgba(37,99,176,0.65);
   outline-offset: -2px;
+  z-index: 1;
 }
 
 .cell.highlighted { background: var(--highlight); }
