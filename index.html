@@ -809,6 +809,17 @@ header p {
   .act-btn { flex: 1; text-align: center; font-size: 0.5rem; padding: 8px 4px; }
 }
 
+/* ── TIMER/MISTAKES ABOVE BOARD (≤414px) ────────────────────────────────── */
+@media (max-width: 414px) {
+  .side-panel {
+    order: -1;
+  }
+  .side-panel .numpad,
+  .side-panel .actions {
+    display: none;
+  }
+}
+
 /* ── MOBILE KEYPAD BOTTOM SHEET (≤420px) ────────────────────────────────── */
 .mobile-keypad {
   display: none;
