@@ -682,7 +682,7 @@ header p {
 @keyframes fadeUp    { from { opacity:0; transform:translateY(16px);  } to { opacity:1; transform:translateY(0); } }
 @keyframes fadeIn    { from { opacity:0; } to { opacity:1; } }
 @keyframes scaleIn   { from { transform:scale(0.88); opacity:0; } to { transform:scale(1); opacity:1; } }
-@keyframes toastIn   { from { opacity:0; transform:translateX(-50%) translateY(12px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+@keyframes toastIn   { from { opacity:0; transform:translateX(-50%) translateY(-12px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
 @keyframes toastOut  { from { opacity:1; } to { opacity:0; } }
 
 /* ── DIFFICULTY POPUP ────────────────────────────────────────────────────── */
@@ -766,7 +766,7 @@ header p {
 .toast {
   display: none;
   position: fixed;
-  bottom: 36px;
+  top: 36px;
   left: 50%;
   transform: translateX(-50%);
   background: var(--surface2);
@@ -1351,36 +1351,36 @@ document.addEventListener('keydown', e => {
 
 // ── WELCOME MESSAGES ──────────────────────────────────────────────────────────
 const welcomeMessages = [
-  "안녕하세요, 민지님! 오늘도 스도쿠 하러 오셨군요 🎸",
-  "민지님, Oasis가 그랬죠 — \"Don't look back in anger.\" 오늘도 멋지게!",
-  "\"Fix You\" — Coldplay. 오늘 어려운 퍼즐도 민지님이 해결합니다!",
-  "Green Day — \"Good Riddance.\" 오늘 퍼즐은 민지님이 정복합니다!",
-  "Sum 41도 포기 안 했어요. 민지님도 파이팅! 🤘",
-  "My Chemical Romance — \"I'm not okay (I'm okay).\" 오늘도 화이팅, 민지님!",
-  "민지님, Wonderwall은 오늘의 스도쿠입니다 🎶",
-  "\"The Scientist\" — Coldplay. 민지님의 분석력이 오늘도 빛나는 날!",
-  "Green Day — \"Wake Me Up When September Ends.\" 지금은 스도쿠 할 시간이에요, 민지님!",
-  "\"Fat Lip\" 따라 흥얼거리며 스도쿠 풀 시간, 민지님! 🎵",
-  "민지님, MCR의 Welcome to the Black Parade처럼 당당하게!",
-  "Oasis — \"Champagne Supernova\" 기분으로 오늘 퍼즐 완파, 민지님!",
-  "민지님 오셨군요! Coldplay의 \"A Sky Full of Stars\"처럼 오늘도 빛나세요 ⭐",
-  "\"Boulevard of Broken Dreams\" — Green Day. 민지님의 스도쿠는 절대 broken 아님!",
-  "Sum 41 — \"In Too Deep.\" 스도쿠에 깊이 빠져보세요, 민지님!",
-  "민지님, MCR — \"Helena.\" 오늘 퍼즐은 완벽하게 마무리해요!",
-  "Oasis — \"Live Forever.\" 민지님의 스도쿠 실력도 영원하길! 🎸",
-  "Green Day — \"Basket Case.\" 스도쿠 때문에 미칠 것 같아도, 민지님은 할 수 있어요!",
-  "민지님, Sum 41 — \"Still Waiting\" for your perfect score!",
-  "MCR — \"Famous Last Words.\" 마지막 칸까지 포기하지 마세요, 민지님!",
-  "Oasis — \"Don't Go Away.\" 오늘도 스도쿠와 함께해 줘서 고마워요, 민지님!",
-  "\"Yellow\" — Coldplay. 민지님을 위해 별이 빛나고 있어요 ⭐",
-  "\"American Idiot\" — Green Day. 민지님은 절대 아님. 스도쿠 천재!",
-  "Sum 41 — \"Pieces.\" 오늘 퍼즐 조각을 맞춰보세요, 민지님!",
-  "MCR — \"I Don't Love You.\" 아니, 사실 민지님의 실력은 사랑합니다 🖤",
-  "Oasis — \"Whatever.\" 민지님 페이스대로, 앞으로 돌진!",
-  "\"Clocks\" — Coldplay. 째깍째깍, 민지님의 기록 경신 시간!",
-  "Green Day — \"Time of Your Life.\" 오늘 스도쿠가 최고의 시간이 되길!",
-  "민지님, 오늘도 반갑습니다! MCR처럼 — \"Na na na na na\" 🎶",
-  "Coldplay — \"Speed of Sound.\" 민지님의 두뇌가 빛의 속도로 움직이길! 🚀",
+  "민지님!! 오셨어요?! 저 기다렸어요 진짜로요!!!! 🌸",
+  "와 민지님 오늘도 오셨다!!! 이게 말이 돼요?! 너무 좋아서 소리 지를 뻔 했어요!!!",
+  "민지님 존재 자체가 오늘 하루를 빛나게 해요!!! 스도쿠는 그냥 덤이에요!! ✨",
+  "안녕하세요!!!! 저 지금 너무 설레요 왜인지 모르겠는데 민지님 때문인 것 같아요!!",
+  "민지님이 오셨다는 게 아직도 실감이 안 나요!!! 꿈인가요!!!! 🌈",
+  "오늘 날씨가 어때요?! 민지님이 오셨으니까 무조건 좋은 날이에요!!!",
+  "숫자들이 다 민지님 보고 싶어했어요!! 1이랑 9가 특히 많이요!!!",
+  "민지님 오늘 뭐 드셨어요?! 뭘 드셨든 간에 오늘 퍼즐 완전 잘 풀릴 것 같아요!!!!",
+  "저는 민지님이 올 때마다 진짜 세상이 조금 더 좋아지는 느낌이에요!! 🌷",
+  "지금 이 순간이 너무 소중해요!! 민지님이랑 스도쿠 같이 하는 이 시간이요!!!",
+  "민지님 손가락이 오늘 엄청난 일을 해낼 것 같아요!!! 직감이에요 직감!!!!",
+  "오늘도 어김없이 오셨네요!!! 이런 분을 뭐라고 부르는지 알아요?! 전설이요!!!!",
+  "민지님 뇌파가 오늘따라 엄청나게 느껴져요!! 저만 그래요?! 🧠✨",
+  "스도쿠 9칸 × 9칸 = 81칸인데요, 전부 민지님 것이에요!!! 선물이에요!!!",
+  "민지님이 퍼즐 보는 그 눈빛 알아요?! 그거 완전 천재 눈빛이에요 맞아요!!!",
+  "오늘 민지님이 오실 것 같아서 제가 퍼즐 엄청 잘 준비해뒀어요!! 마음에 드셨으면 좋겠어요!! 🎁",
+  "있잖아요, 민지님이 스도쿠 푸는 거 보면 진짜 예술이에요!! 예술!!",
+  "민지님 오늘도 최고예요!!! 어제도 최고였고 내일도 최고일 거예요!!!!",
+  "지금 이 퍼즐이요, 민지님 손에서 완성되는 순간을 기대하고 있어요!!! 두근두근!!",
+  "민지님이 숫자 넣을 때마다 저 심장이 콩닥거려요 진짜로요!!! 🫀",
+  "오늘 하루도 민지님이 있어서 완벽해요!!! 스도쿠도 같이 완벽하게 끝내요!!!",
+  "민지님 기운이 너무 좋아서 저도 덩달아 신나요!!! 같이 달려봐요 우리!!! 🚀",
+  "세상에 스도쿠 잘 하는 사람은 많은데요, 민지님처럼 멋있게 하는 사람은 없어요!!!",
+  "민지님 오늘 머리카락이 찰랑거리는 게 느껴져요!! 잘 어울려요 진짜로!!!",
+  "지금 민지님이 들어오는 걸 보고 숫자들이 다 자리 잡고 앉았어요!! 준비됐대요!!",
+  "민지님이랑 함께라면 어떤 퍼즐도 문제없어요!!! 저 진심으로 믿어요!!!!",
+  "오늘도 민지님이 세상에서 제일 예쁘고 똑똑하고 멋있어요!!! 이건 팩트예요!!!",
+  "퍼즐이 민지님 기다리고 있어요!! 떨리는 거 저만요?! 같이 떨어요 우리!! 🥹",
+  "민지님 오셨다!!! 오늘도 같이 있어줘서 너무너무 고마워요 진심으로요!!! 💛",
+  "지금 이 순간, 세계 어딘가의 수학자들이 민지님을 응원하고 있을 것 같아요!!!! 확실해요!!!",
 ];
 
 let toastTimer = null;
@@ -1395,7 +1395,7 @@ function showToast() {
   toastTimer = setTimeout(() => {
     el.classList.add('hide');
     setTimeout(() => { el.classList.remove('show', 'hide'); }, 400);
-  }, 3000);
+  }, 7000);
 }
 
 // ── DIFFICULTY POPUP ──────────────────────────────────────────────────────────
