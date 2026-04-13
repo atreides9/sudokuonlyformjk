@@ -673,6 +673,92 @@ header p {
   .actions { flex-direction: row; flex-wrap: wrap; width: calc(var(--cell-size)*9); }
   .act-btn { flex: 1; text-align: center; font-size: 0.5rem; padding: 8px 4px; }
 }
+
+/* ── MOBILE KEYPAD BOTTOM SHEET (≤420px) ────────────────────────────────── */
+.mobile-keypad {
+  display: none;
+}
+
+@media (max-width: 420px) {
+  body { padding-bottom: 0; }
+
+  .mobile-keypad {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    bottom: -100%;
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    border-top: 2px solid var(--box-border);
+    padding: 12px 12px 24px;
+    gap: 8px;
+    z-index: 200;
+    transition: bottom 0.28s cubic-bezier(0.34, 1.15, 0.64, 1);
+  }
+
+  .mobile-keypad.show {
+    bottom: 0;
+  }
+
+  .mk-nums {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 4px;
+  }
+
+  .mk-num-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--cell-font);
+    font-size: 1.15rem;
+    height: 46px;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  .mk-num-btn:active { background: var(--highlight-same); }
+  .mk-num-btn.complete { color: var(--text-muted); border-color: var(--border); }
+
+  .mk-actions {
+    display: flex;
+    gap: 4px;
+  }
+
+  .mk-act-btn {
+    flex: 1;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: var(--body-font);
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 4px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+  }
+
+  .mk-act-btn:hover { border-color: var(--border-active); color: var(--text); }
+  .mk-act-btn.notes-on { border-color: var(--accent); color: var(--accent); }
+
+  .mk-close-btn {
+    flex: 1;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: var(--body-font);
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 4px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+  }
+}
 </style>
 </head>
 <body>
@@ -756,6 +842,16 @@ header p {
       </div>
     </div>
     <button class="win-btn" onclick="newGame()">다시 하기</button>
+  </div>
+</div>
+
+<!-- MOBILE KEYPAD BOTTOM SHEET -->
+<div id="mobile-keypad" class="mobile-keypad">
+  <div class="mk-nums" id="mk-nums"></div>
+  <div class="mk-actions">
+    <button class="mk-act-btn" id="mk-erase">✕ 지우기</button>
+    <button class="mk-act-btn" id="mk-notes">✎ 메모</button>
+    <button class="mk-close-btn" id="mk-close">닫기</button>
   </div>
 </div>
 
@@ -855,6 +951,7 @@ function newGame() {
 
   document.getElementById('hint-count').textContent = `(3)`;
   document.getElementById('btn-notes').classList.remove('notes-on');
+  hideMobileKeypad();
   updatePauseBtn();
   startTimer();
   renderBoard();
@@ -978,11 +1075,45 @@ function renderMistakes() {
   }
 }
 
+// ── MOBILE KEYPAD ─────────────────────────────────────────────────────────────
+function isMobileKeypadScreen() {
+  return window.innerWidth <= 420;
+}
+
+function showMobileKeypad() {
+  document.getElementById('mobile-keypad').classList.add('show');
+  renderMobileKeypad();
+}
+
+function hideMobileKeypad() {
+  document.getElementById('mobile-keypad').classList.remove('show');
+}
+
+function renderMobileKeypad() {
+  const numsEl = document.getElementById('mk-nums');
+  numsEl.innerHTML = '';
+  for (let n = 1; n <= 9; n++) {
+    const btn = document.createElement('button');
+    btn.className = 'mk-num-btn';
+    btn.textContent = n;
+    let cnt = 0;
+    for (let r = 0; r < 9; r++) for (let c = 0; c < 9; c++) if (state.board[r][c] === n) cnt++;
+    if (cnt >= 9) btn.classList.add('complete');
+    btn.addEventListener('click', () => { inputNumber(n); renderMobileKeypad(); });
+    numsEl.appendChild(btn);
+  }
+  document.getElementById('mk-notes').classList.toggle('notes-on', state.notesMode);
+}
+
 // ── INTERACTION ───────────────────────────────────────────────────────────────
 function selectCell(r, c) {
   if (state.paused) return;
   state.selected = {r, c};
   applyHighlights();
+  if (isMobileKeypadScreen()) {
+    if (state.puzzle[r][c] === 0) showMobileKeypad();
+    else hideMobileKeypad();
+  }
 }
 
 function inputNumber(n) {
@@ -1021,6 +1152,8 @@ function eraseCell() {
 function toggleNotes() {
   state.notesMode = !state.notesMode;
   document.getElementById('btn-notes').classList.toggle('notes-on', state.notesMode);
+  const mkNotes = document.getElementById('mk-notes');
+  if (mkNotes) mkNotes.classList.toggle('notes-on', state.notesMode);
 }
 
 function useHint() {
@@ -1049,6 +1182,7 @@ function checkWin() {
 function gameOver() {
   state.gameOver = true;
   clearInterval(state.timerInterval);
+  hideMobileKeypad();
   renderBoard();
   setTimeout(() => document.getElementById('fail-overlay').classList.add('show'), 300);
 }
@@ -1094,6 +1228,11 @@ document.getElementById('btn-notes').addEventListener('click', toggleNotes);
 document.getElementById('btn-hint').addEventListener('click', useHint);
 document.getElementById('btn-new').addEventListener('click', newGame);
 document.getElementById('pause-btn').addEventListener('click', togglePause);
+
+// Mobile keypad buttons
+document.getElementById('mk-erase').addEventListener('click', () => { eraseCell(); renderMobileKeypad(); });
+document.getElementById('mk-notes').addEventListener('click', () => { toggleNotes(); renderMobileKeypad(); });
+document.getElementById('mk-close').addEventListener('click', hideMobileKeypad);
 
 newGame();
 </script>
