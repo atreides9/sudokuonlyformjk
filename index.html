@@ -24,17 +24,17 @@
   --selected-bg: rgba(255,200,80,0.28);
   --error: #c0675a;
   --error-bg: rgba(192,103,90,0.12);
-  --given: #d4c4a8;
+  --given: #ffaa00;
   --user-color: #c8b89a;
   --note-color: #aaa;
-  --board-bg: #0f0f0f;
+  --board-bg: #1f1f1f;
   --cell-font: 'DM Mono', monospace;
   --note-font: 'DM Mono', monospace;
   --cell-font-size: 1.2rem;
   --cell-font-weight: 400;
   --given-font-weight: 500;
   --cell-size: 56px;
-  --board-outer-border: 2px solid #999999;
+  --board-outer-border: 2px solid #545454;
   --shadow: none;
   --body-font: 'DM Mono', monospace;
   --title-font: 'Playfair Display', serif;
@@ -361,10 +361,10 @@ body::before {
 }
 
 /* Box borders */
-.cell[data-col="2"], .cell[data-col="5"] { border-right: 2px solid var(--box-border); }
-.cell[data-row="2"], .cell[data-row="5"] { border-bottom: 2px solid var(--box-border); }
+.cell[data-col="2"], .cell[data-col="5"] { border-right: 5px solid var(--box-border); }
+.cell[data-row="2"], .cell[data-row="5"] { border-bottom: 5px solid var(--box-border); }
 
-[data-theme="light"] .cell { border-color: #c8bfad; }
+[data-theme="light"] .cell { border-color: #8e8e8e; }
 [data-theme="light"] .cell[data-col="2"],
 [data-theme="light"] .cell[data-col="5"] { border-right: 2px solid var(--box-border); }
 [data-theme="light"] .cell[data-row="2"],
